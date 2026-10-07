@@ -1,0 +1,34 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.io import wavfile
+
+x = np.linspace(-10, 10, 1000)
+y = np.where(x == 0, 1.0, np.sin(np.pi * x) / (np.pi * x))
+
+plt.figure(figsize=(9, 4.5))
+plt.plot(x, y, color="cyan", linewidth=2.5, label="f(x) = sin(pi*x) / (pi*x)")
+plt.title("The Hidden Sound Inside Math Functions", color="white", fontsize=14, pad=15)
+plt.xlabel("x", color="white")
+plt.ylabel("y", color="white")
+plt.axhline(0, color="gray", linewidth=1, linestyle="--")
+plt.axvline(0, color="gray", linewidth=1, linestyle="--")
+plt.grid(True, linestyle=":", alpha=0.3)
+
+plt.gca().set_facecolor("black")
+plt.gcf().patch.set_facecolor("black")
+plt.tick_params(colors="white")
+plt.legend(facecolor="black", edgecolor="white", labelcolor="white")
+plt.tight_layout()
+
+plt.savefig("math_function_graph.png", facecolor="black", dpi=300)
+plt.show()
+
+sample_rate = 44100
+duration = 3.0
+t = np.linspace(0, duration, int(sample_rate * duration))
+
+freq_base = 440
+sound_wave = np.sin(2 * np.pi * freq_base * t) * np.abs(np.where(t == 0, 1.0, np.sin(np.pi * t) / (np.pi * t)))
+
+audio_data = np.int16(sound_wave / np.max(np.abs(sound_wave)) * 32767)
+wavfile.write("math_sound.wav", sample_rate, audio_data)
